@@ -1,0 +1,86 @@
+/* General Body Styling */
+body {
+    width: 100%;
+    height: 100%;
+    --color: rgba(114, 114, 114, 0.3);
+    background-color: #191a1a;
+    background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
+        linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
+    background-size: 55px 55px;
+    font-family: "Rubik", sans-serif;
+    text-align: center;
+    color: white;
+}
+
+/* Container Styling */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+/* Heading Styling */
+h1 {
+    font-size: 3rem;
+    color: #db28ff;
+    margin-bottom: 2rem;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    gap: 3rem;
+    width: 100%;
+    max-width: 400px;
+    font-family: "Rubik", sans-serif;
+}
+
+/* Input Fields Styling */
+input {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid #e5fb6a;
+    background-color: #191a1a;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    font-family: "Rubik", sans-serif;
+}
+
+input:focus {
+    border-color: #2bf46e;
+}
+
+/* Button Styling */
+button {
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    border: 0;
+    font-size: 1rem;
+    font-family: "Rubik", sans-serif;
+    background-image: linear-gradient(to right bottom, #e5fb6a 0%, #2bf46e 100%);
+    box-shadow: -4px -4px 16px 8px rgba(229, 251, 106, 0.3), 4px 4px 16px 8px rgba(43, 244, 110, 0.3);
+    transition: all 0.3s cubic-bezier(0.6, 0.12, 0.39, 0.83);
+}
+
+button:hover,
+button:active,
+button:focus,
+button:focus-visible,
+button:focus-within {
+    box-shadow: -4px -4px 32px 4px rgba(229, 251, 106, 0.67), 4px 4px 32px 4px rgba(43, 244, 110, 0.67);
+    filter: contrast(1.25);
+}
+
+/* Error Message Styling */
+p {
+    color: #ff4d4d;
+    font-size: 1rem;
+}
