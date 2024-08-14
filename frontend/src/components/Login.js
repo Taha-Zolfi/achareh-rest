@@ -4,31 +4,43 @@ import { useNavigate } from 'react-router-dom';
 import './login.css';
 
 const Login = () => {
-  const [step, setStep] = useState(1); // 1: Enter Phone Number, 2: Login, 3: Register
+  const [step, setStep] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [enteredCode, setEnteredCode] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loginAttempts, setLoginAttempts] = useState(0); // Track failed login attempts
-  const [isDisabled, setIsDisabled] = useState(false); // Track if input and button should be disabled
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [serverVerificationCode, setServerVerificationCode] = useState('');
   const navigate = useNavigate();
 
   const handlePhoneSubmit = (e) => {
     e.preventDefault();
     axios.post('http://127.0.0.1:8000/check_phone/', { phone_number: phoneNumber })
       .then(response => {
-        if (response.data === "banned"){
-            navigate('/banned');
-          }
-        if (response.data.exists) {
+        if (response.data === "banned") {
+          navigate('/banned');
+        } else if (!response.data.exists) {
+          setServerVerificationCode(response.data.verification_code);
           setStep(2);
         } else {
-          setStep(3); 
+          setStep(4);
         }
       })
       .catch(() => {
-        setError('Error checking phone number');
+        setError('ارور هنگام چک کردن شماره');
       });
+  };
+
+  const handleCodeSubmit = (e) => {
+    e.preventDefault();
+    if (enteredCode === serverVerificationCode) {
+      setStep(4);
+    } else {
+      setError('کد اشتباهه دایی');
+    }
   };
 
   const handleRegister = (e) => {
@@ -67,15 +79,20 @@ const Login = () => {
         }
       })
       .finally(() => {
-
         setTimeout(() => setIsDisabled(false), 3000);
       });
   };
 
   return (
     <div className='container'>
-      <h1>{step === 1 ? 'شماره تلفنتو وارد کن' : step === 2 ? 'ورود' : 'ثبت نام'}</h1>
-      <form onSubmit={step === 1 ? handlePhoneSubmit : (step === 2 ? handleLogin : handleRegister)}>
+      <h1>
+        {step === 1 ? 'شماره تلفنتو وارد کن' : 
+         step === 2 ? 'کد تاییدتو وارد کن' : 
+         step === 3 ? 'ورود' : 'ثبت نام'}
+      </h1>
+      <form onSubmit={step === 1 ? handlePhoneSubmit : 
+                           step === 2 ? handleCodeSubmit : 
+                           step === 3 ? handleLogin : handleRegister}>
         {step === 1 && (
           <>
             <input 
@@ -87,9 +104,21 @@ const Login = () => {
             <button type="submit">بعدی</button>
           </>
         )}
-        {(step === 2 || step === 3) && (
+        {step === 2 && (
           <>
-            {step === 3 && (
+            <p>کد تأیید شما: {serverVerificationCode}</p>
+            <input 
+              type="text" 
+              placeholder="کد تایید" 
+              value={enteredCode} 
+              onChange={(e) => setEnteredCode(e.target.value)} 
+            />
+            <button type="submit">بعدی</button>
+          </>
+        )}
+        {(step === 3 || step === 4) && (
+          <>
+            {step === 4 && (
               <input 
                 type="text" 
                 placeholder="نام کاربری" 
@@ -105,7 +134,7 @@ const Login = () => {
               disabled={isDisabled}
             />
             <button type="submit" disabled={isDisabled}>
-              {step === 2 ? 'ورود' : 'ثبت نام'}
+              {step === 3 ? 'ورود' : 'ثبت نام'}
             </button>
           </>
         )}
