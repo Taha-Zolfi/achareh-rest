@@ -9,12 +9,6 @@ class FailedLoginAttempt(models.Model):
     def __str__(self):
         return self.ip_address
 
-class student(models.Model):
-    age = models.IntegerField()
-    name = models.CharField(max_length=100)    
-
-    def __str__(self):
-        return self.name
     
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=15, unique=True)
