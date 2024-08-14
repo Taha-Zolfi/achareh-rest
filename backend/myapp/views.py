@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status , permissions
 from datetime import timedelta
 from .models import CustomUser, FailedLoginAttempt
-from .serializer import StudentSerializer , CustomUserSerializer , UserLoginSerializer
+
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
