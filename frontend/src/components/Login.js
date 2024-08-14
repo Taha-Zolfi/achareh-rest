@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loginAttempts, setLoginAttempts] = useState(0); // Track failed login attempts
+  const [isDisabled, setIsDisabled] = useState(false); // Track if input and button should be disabled
   const navigate = useNavigate();
 
   const handlePhoneSubmit = (e) => {
@@ -20,9 +21,9 @@ const Login = () => {
             navigate('/banned');
           }
         if (response.data.exists) {
-          setStep(2);  // Move to the login step
+          setStep(2);
         } else {
-          setStep(3);  // Move to the registration step
+          setStep(3); 
         }
       })
       .catch(() => {
@@ -35,7 +36,7 @@ const Login = () => {
     axios.post('http://127.0.0.1:8000/register/', { phone_number: phoneNumber, username, password })
       .then(response => {
         localStorage.setItem('token', response.data.token);
-        navigate('/home');
+        navigate('/');
       })
       .catch(error => {
         setError(error.response.data.error || 'An error occurred');
@@ -50,10 +51,12 @@ const Login = () => {
       return;
     }
 
+    setIsDisabled(true);
+
     axios.post('http://127.0.0.1:8000/login/', { phone_number: phoneNumber, password })
       .then(response => {
         localStorage.setItem('token', response.data.token);
-        navigate('/home');
+        navigate('/');
       })
       .catch(error => {
         setLoginAttempts(prevAttempts => prevAttempts + 1);
@@ -62,6 +65,10 @@ const Login = () => {
         } else {
           setError(error.response.data.error || 'An error occurred');
         }
+      })
+      .finally(() => {
+
+        setTimeout(() => setIsDisabled(false), 3000);
       });
   };
 
@@ -95,8 +102,11 @@ const Login = () => {
               placeholder="پسورد" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
+              disabled={isDisabled}
             />
-            <button type="submit">{step === 2 ? 'ورود' : 'ثبت نام'}</button>
+            <button type="submit" disabled={isDisabled}>
+              {step === 2 ? 'ورود' : 'ثبت نام'}
+            </button>
           </>
         )}
         {error && <p>{error}</p>}
